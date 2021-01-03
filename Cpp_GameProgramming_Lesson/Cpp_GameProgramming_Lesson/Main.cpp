@@ -20,6 +20,9 @@ public:
     /// </summary>
     void Update()
     {
+        // 速度に下向きの速度を足すことで重力落下を表現する
+        _velocity.y += 0.3f;
+
         // 座標に速度を足すことで移動を表現する
         _position += _velocity;
     }
