@@ -11,6 +11,7 @@ public:
         _position(position),
         _initial_position(position),
         _velocity(0, 0),
+        _is_grounded(true),
         _texture(U"assets/textures/player.png")
     {
     }
@@ -35,6 +36,9 @@ public:
 
             // 座標を地面の位置に補正
             _position.y = _initial_position.y;
+
+            // 接地フラグを立てる
+            _is_grounded = true;
         }
     }
 
@@ -51,8 +55,17 @@ public:
     /// </summary>
     void Jump()
     {
+        // 接地していなければ終了
+        if (!_is_grounded)
+        {
+            return;
+        }
+
         // 上向きの速度を加えることでジャンプを表現する
         _velocity.y = -10;
+
+        // 接地フラグを折る
+        _is_grounded = false;
     }
 
 private:
@@ -70,6 +83,11 @@ private:
     /// 速度
     /// </summary>
     Vec2 _velocity;
+
+    /// <summary>
+    /// 接地中か
+    /// </summary>
+    bool _is_grounded;
 
     /// <summary>
     /// テクスチャ
