@@ -46,6 +46,15 @@ public:
         _texture.draw(_position);
     }
 
+    /// <summary>
+    /// ジャンプする
+    /// </summary>
+    void Jump()
+    {
+        // 上向きの速度を加えることでジャンプを表現する
+        _velocity.y = -10;
+    }
+
 private:
     /// <summary>
     /// 座標
@@ -84,6 +93,13 @@ void Main()
     // このwhileの中にゲームプログラムを書きます。
     while (System::Update())
     {
+        // スペースを押下したら
+        if (KeySpace.down())
+        {
+            // プレイヤーをジャンプさせる
+            player.Jump();
+        }
+
         // プレイヤー更新
         player.Update();
 
