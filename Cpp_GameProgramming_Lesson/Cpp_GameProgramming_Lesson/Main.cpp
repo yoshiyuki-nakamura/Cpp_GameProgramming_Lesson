@@ -9,11 +9,21 @@ class Player
 public:
     Player(Vec2 position) :
         _position(position),
+        _velocity(0, 0),
         _texture(U"assets/textures/player.png")
     {
     }
 
 public:
+    /// <summary>
+    /// 更新
+    /// </summary>
+    void Update()
+    {
+        // 座標に速度を足すことで移動を表現する
+        _position += _velocity;
+    }
+
     /// <summary>
     /// 描画
     /// </summary>
@@ -27,6 +37,11 @@ private:
     /// 座標
     /// </summary>
     Vec2 _position;
+
+    /// <summary>
+    /// 速度
+    /// </summary>
+    Vec2 _velocity;
 
     /// <summary>
     /// テクスチャ
@@ -50,6 +65,9 @@ void Main()
     // このwhileの中にゲームプログラムを書きます。
     while (System::Update())
     {
+        // プレイヤー更新
+        player.Update();
+
         // 背景画像描画
         background.draw(0, 0);
 
