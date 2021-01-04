@@ -9,6 +9,7 @@ class Player
 public:
     Player(Vec2 position) :
         _position(position),
+        _initial_position(position),
         _velocity(0, 0),
         _texture(U"assets/textures/player.png")
     {
@@ -25,6 +26,16 @@ public:
 
         // 座標に速度を足すことで移動を表現する
         _position += _velocity;
+
+        // 地面に達したら
+        if (_initial_position.y < _position.y)
+        {
+            // 速度を0にする
+            _velocity.y = 0;
+
+            // 座標を地面の位置に補正
+            _position.y = _initial_position.y;
+        }
     }
 
     /// <summary>
@@ -40,6 +51,11 @@ private:
     /// 座標
     /// </summary>
     Vec2 _position;
+
+    /// <summary>
+    /// 初期座標
+    /// </summary>
+    Vec2 _initial_position;
 
     /// <summary>
     /// 速度
