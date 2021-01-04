@@ -107,6 +107,9 @@ void Main()
     // プレイヤーを生成
     Player player = Player(Vec2(100, 400));
 
+    // 操作説明用フォント
+    Font control_guide_font = Font(30);
+
     // ゲームループです。
     // このwhileの中にゲームプログラムを書きます。
     while (System::Update())
@@ -126,5 +129,8 @@ void Main()
 
         // プレイヤー描画
         player.Draw();
+
+        // 操作説明描画
+        control_guide_font(U"スペースキーでジャンプ").drawAt(Scene::Center());
     }
 }
