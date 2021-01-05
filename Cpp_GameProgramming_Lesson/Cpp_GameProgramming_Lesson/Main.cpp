@@ -68,6 +68,15 @@ public:
         _is_grounded = false;
     }
 
+    /// <summary>
+    /// 当たり判定を取得
+    /// </summary>
+    /// <returns></returns>
+    RectF GetHitArea()
+    {
+        return RectF(_position, _texture.size());
+    }
+
 private:
     /// <summary>
     /// 座標
@@ -133,6 +142,15 @@ public:
     void Draw()
     {
         _texture.draw(_position);
+    }
+
+    /// <summary>
+    /// 当たり判定を取得
+    /// </summary>
+    /// <returns></returns>
+    RectF GetHitArea()
+    {
+        return RectF(_position, _texture.size());
     }
 
 private:
