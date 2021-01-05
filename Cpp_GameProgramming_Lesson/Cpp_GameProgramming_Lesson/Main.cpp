@@ -189,6 +189,23 @@ private:
 };
 
 /// <summary>
+/// 矩形vs矩形の衝突判定
+/// </summary>
+/// <param name="rect1"></param>
+/// <param name="rect2"></param>
+/// <returns></returns>
+bool IsHit(RectF rect1, RectF rect2)
+{
+    // Siv3Dは図形同士の衝突判定がすでに備わっている
+    //return rect1.intersects(rect2);
+
+    return rect1.x < rect2.x + rect2.w
+        && rect2.x < rect1.x + rect1.w
+        && rect1.y < rect2.y + rect2.h
+        && rect2.y < rect1.y + rect1.h;
+}
+
+/// <summary>
 /// Main関数です。
 /// ここからプログラムが始まります。
 /// </summary>
