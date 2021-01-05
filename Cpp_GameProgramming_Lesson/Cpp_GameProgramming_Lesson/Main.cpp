@@ -240,6 +240,13 @@ void Main()
         // 敵更新
         enemy.Update();
 
+        // 衝突したら
+        if (IsHit(player.GetHitArea(), enemy.GetHitArea()))
+        {
+            // ゲーム終了
+            System::Exit();
+        }
+
         // 背景画像描画
         background.draw(0, 0);
 
