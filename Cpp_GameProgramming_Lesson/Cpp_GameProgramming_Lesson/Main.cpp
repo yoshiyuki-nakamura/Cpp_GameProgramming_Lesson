@@ -289,6 +289,12 @@ void Main()
             // スペースを押下したら
             if (KeySpace.down())
             {
+                // プレイヤーを再生成して初期状態にする
+                player = Player(Vec2(100, 400));
+
+                // 敵を再生成して初期状態にする
+                enemy = Enemy(Vec2(900, 400));
+
                 // タイトルシーンへ遷移
                 scene = SceneType::Title;
             }
