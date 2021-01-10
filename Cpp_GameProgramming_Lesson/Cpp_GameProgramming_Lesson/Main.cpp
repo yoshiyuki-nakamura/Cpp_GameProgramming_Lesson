@@ -68,6 +68,15 @@ public:
         _is_grounded = false;
     }
 
+    /// <summary>
+    /// 当たり判定を取得
+    /// </summary>
+    /// <returns></returns>
+    RectF GetHitArea()
+    {
+        return RectF(_position, _texture.size());
+    }
+
 private:
     /// <summary>
     /// 座標
@@ -96,6 +105,107 @@ private:
 };
 
 /// <summary>
+/// 敵
+/// </summary>
+class Enemy
+{
+public:
+    Enemy(Vec2 position):
+        _position(position),
+        _initial_position(position),
+        _velocity(0, 0),
+        _texture(U"assets/textures/enemy.png")
+    {
+        Reset();
+    }
+
+public:
+    /// <summary>
+    /// 更新
+    /// </summary>
+    void Update() 
+    {
+        // 座標に速度を足すことで移動を表現する
+        _position += _velocity;
+
+        // 画面左端に達したら
+        if (_position.x < -100)
+        {
+            // リセット
+            Reset();
+        }
+    }
+
+    /// <summary>
+    /// 描画
+    /// </summary>
+    void Draw()
+    {
+        _texture.draw(_position);
+    }
+
+    /// <summary>
+    /// 当たり判定を取得
+    /// </summary>
+    /// <returns></returns>
+    RectF GetHitArea()
+    {
+        return RectF(_position, _texture.size());
+    }
+
+private:
+    /// <summary>
+    /// リセット
+    /// </summary>
+    void Reset()
+    {
+        // 初期位置に補正
+        _position = _initial_position;
+
+        // 速度をランダムで決定
+        _velocity.x = Random(-10.0f, -5.0f);
+    }
+
+private:
+    /// <summary>
+    /// 座標
+    /// </summary>
+    Vec2 _position;
+
+    /// <summary>
+    /// 初期座標
+    /// </summary>
+    Vec2 _initial_position;
+
+    /// <summary>
+    /// 速度
+    /// </summary>
+    Vec2 _velocity;
+
+    /// <summary>
+    /// テクスチャ
+    /// </summary>
+    Texture _texture;
+};
+
+/// <summary>
+/// 矩形vs矩形の衝突判定
+/// </summary>
+/// <param name="rect1"></param>
+/// <param name="rect2"></param>
+/// <returns></returns>
+bool IsHit(RectF rect1, RectF rect2)
+{
+    // Siv3Dは図形同士の衝突判定がすでに備わっている
+    //return rect1.intersects(rect2);
+
+    return rect1.x < rect2.x + rect2.w
+        && rect2.x < rect1.x + rect1.w
+        && rect1.y < rect2.y + rect2.h
+        && rect2.y < rect1.y + rect1.h;
+}
+
+/// <summary>
 /// Main関数です。
 /// ここからプログラムが始まります。
 /// </summary>
@@ -106,6 +216,9 @@ void Main()
 
     // プレイヤーを生成
     Player player = Player(Vec2(100, 400));
+
+    // 敵を生成
+    Enemy enemy = Enemy(Vec2(900, 400));
 
     // 操作説明用フォント
     Font control_guide_font = Font(30);
@@ -124,11 +237,24 @@ void Main()
         // プレイヤー更新
         player.Update();
 
+        // 敵更新
+        enemy.Update();
+
+        // 衝突したら
+        if (IsHit(player.GetHitArea(), enemy.GetHitArea()))
+        {
+            // ゲーム終了
+            System::Exit();
+        }
+
         // 背景画像描画
         background.draw(0, 0);
 
         // プレイヤー描画
         player.Draw();
+
+        // 敵描画
+        enemy.Draw();
 
         // 操作説明描画
         control_guide_font(U"スペースキーでジャンプ").drawAt(Scene::Center());
