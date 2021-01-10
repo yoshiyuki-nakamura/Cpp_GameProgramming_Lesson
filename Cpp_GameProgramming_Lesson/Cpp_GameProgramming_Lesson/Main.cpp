@@ -246,7 +246,7 @@ void Main()
     Font to_title_guide_font = Font(30);
 
     // シーンを設定
-    SceneType scene = SceneType::Game;
+    SceneType scene = SceneType::Title;
 
     // ゲームループです。
     // このwhileの中にゲームプログラムを書きます。
