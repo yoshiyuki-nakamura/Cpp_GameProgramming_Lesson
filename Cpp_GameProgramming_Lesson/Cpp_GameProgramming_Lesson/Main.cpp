@@ -230,6 +230,12 @@ void Main()
     // 敵を生成
     Enemy enemy = Enemy(Vec2(900, 400));
 
+    // ゲームルール説明用フォント
+    Font game_rule_display_font = Font(20);
+
+    // プレススタート説明用フォント
+    Font press_start_guide_font = Font(30);
+
     // 操作説明用フォント
     Font control_guide_font = Font(30);
 
@@ -244,6 +250,12 @@ void Main()
         switch (scene)
         {
         case SceneType::Title:
+            // スペースを押下したら
+            if (KeySpace.down())
+            {
+                // ゲームシーンへ遷移
+                scene = SceneType::Game;
+            }
             break;
         case SceneType::Game:
             // スペースを押下したら
@@ -284,6 +296,10 @@ void Main()
         switch (scene)
         {
         case SceneType::Title:
+            // ゲームルール描画
+            game_rule_display_font(U"赤い四角形のあなたは、青い四角形をジャンプでよけ続けるゲーム（仮）").drawAt(Scene::Center().moveBy(0, -100));
+            // プレススタート描画
+            press_start_guide_font(U"スペースキーでスタート").drawAt(Scene::Center());
             break;
         case SceneType::Game:
             // 操作説明描画
