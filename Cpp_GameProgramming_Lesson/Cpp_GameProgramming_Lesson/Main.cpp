@@ -189,6 +189,16 @@ private:
 };
 
 /// <summary>
+/// シーンの種類
+/// </summary>
+enum SceneType
+{
+    Title,
+    Game,
+    Result,
+};
+
+/// <summary>
 /// 矩形vs矩形の衝突判定
 /// </summary>
 /// <param name="rect1"></param>
@@ -223,6 +233,9 @@ void Main()
     // 操作説明用フォント
     Font control_guide_font = Font(30);
 
+    // シーンを設定
+    SceneType scene = SceneType::Game;
+
     // ゲームループです。
     // このwhileの中にゲームプログラムを書きます。
     while (System::Update())
@@ -247,6 +260,17 @@ void Main()
             System::Exit();
         }
 
+        // シーン別更新
+        switch (scene)
+        {
+        case SceneType::Title:
+            break;
+        case SceneType::Game:
+            break;
+        case SceneType::Result:
+            break;
+        }
+
         // 背景画像描画
         background.draw(0, 0);
 
@@ -258,5 +282,16 @@ void Main()
 
         // 操作説明描画
         control_guide_font(U"スペースキーでジャンプ").drawAt(Scene::Center());
+
+        // シーン別描画
+        switch (scene)
+        {
+        case SceneType::Title:
+            break;
+        case SceneType::Game:
+            break;
+        case SceneType::Result:
+            break;
+        }
     }
 }
