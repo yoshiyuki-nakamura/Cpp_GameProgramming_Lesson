@@ -254,6 +254,22 @@ void Main()
     // ゲーム内スコア
     int score = 0;
 
+    // ハイスコア
+    int high_score = 0;
+
+    // ハイスコアをロード
+    TextReader reader = TextReader();
+    if (reader.open(U"savedata.txt"))
+    {
+        String line;
+        // ファイルから一行読み出し、lineに格納
+        reader.readLine(line);
+        // 文字列を数値に変換
+        high_score = Parse<int>(line);
+        // 使い終わったので、ファイルを閉じる
+        reader.close();
+    }
+
     // ゲームループです。
     // このwhileの中にゲームプログラムを書きます。
     while (System::Update())
@@ -289,6 +305,15 @@ void Main()
             // 衝突したら
             if (IsHit(player.GetHitArea(), enemy.GetHitArea()))
             {
+                // ハイスコアを上回ったら
+                if (high_score < score)
+                {
+                    // ハイスコアを上書き
+                    high_score = score;
+                    // ハイスコアをセーブデータに保存
+                    TextWriter writer = TextWriter(U"savedata.txt");
+                    writer.write(high_score);
+                }
                 // リザルトシーンへ
                 scene = SceneType::Result;
             }
@@ -330,6 +355,8 @@ void Main()
             game_rule_display_font(U"赤い四角形のあなたは、青い四角形をジャンプでよけ続けるゲーム（仮）").drawAt(Scene::Center().moveBy(0, -100));
             // プレススタート描画
             press_start_guide_font(U"スペースキーでスタート").drawAt(Scene::Center());
+            // スコア描画
+            score_font(U"High Score:" + Format(high_score)).draw(Arg::topCenter = Vec2(Scene::Center().x, 0), Palette::Yellow);
             break;
         case SceneType::Game:
             // 操作説明描画
