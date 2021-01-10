@@ -239,6 +239,12 @@ void Main()
     // 操作説明用フォント
     Font control_guide_font = Font(30);
 
+    // ゲームオーバー表示用フォント
+    Font gameover_font = Font(50);
+
+    // タイトルへ戻る説明用フォント
+    Font to_title_guide_font = Font(30);
+
     // シーンを設定
     SceneType scene = SceneType::Game;
 
@@ -280,6 +286,12 @@ void Main()
 
             break;
         case SceneType::Result:
+            // スペースを押下したら
+            if (KeySpace.down())
+            {
+                // タイトルシーンへ遷移
+                scene = SceneType::Title;
+            }
             break;
         }
 
@@ -306,6 +318,10 @@ void Main()
             control_guide_font(U"スペースキーでジャンプ").drawAt(Scene::Center());
             break;
         case SceneType::Result:
+            // ゲームオーバー描画
+            gameover_font(U"ゲームオーバー").drawAt(Scene::Center().moveBy(0, -100));
+            // タイトルへ戻る描画
+            to_title_guide_font(U"スペースキーでタイトルへ戻る").drawAt(Scene::Center());
             break;
         }
     }
