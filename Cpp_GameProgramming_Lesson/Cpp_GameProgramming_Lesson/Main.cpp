@@ -240,32 +240,32 @@ void Main()
     // このwhileの中にゲームプログラムを書きます。
     while (System::Update())
     {
-        // スペースを押下したら
-        if (KeySpace.down())
-        {
-            // プレイヤーをジャンプさせる
-            player.Jump();
-        }
-
-        // プレイヤー更新
-        player.Update();
-
-        // 敵更新
-        enemy.Update();
-
-        // 衝突したら
-        if (IsHit(player.GetHitArea(), enemy.GetHitArea()))
-        {
-            // ゲーム終了
-            System::Exit();
-        }
-
         // シーン別更新
         switch (scene)
         {
         case SceneType::Title:
             break;
         case SceneType::Game:
+            // スペースを押下したら
+            if (KeySpace.down())
+            {
+                // プレイヤーをジャンプさせる
+                player.Jump();
+            }
+
+            // プレイヤー更新
+            player.Update();
+
+            // 敵更新
+            enemy.Update();
+
+            // 衝突したら
+            if (IsHit(player.GetHitArea(), enemy.GetHitArea()))
+            {
+                // リザルトシーンへ
+                scene = SceneType::Result;
+            }
+
             break;
         case SceneType::Result:
             break;
@@ -280,15 +280,14 @@ void Main()
         // 敵描画
         enemy.Draw();
 
-        // 操作説明描画
-        control_guide_font(U"スペースキーでジャンプ").drawAt(Scene::Center());
-
         // シーン別描画
         switch (scene)
         {
         case SceneType::Title:
             break;
         case SceneType::Game:
+            // 操作説明描画
+            control_guide_font(U"スペースキーでジャンプ").drawAt(Scene::Center());
             break;
         case SceneType::Result:
             break;
