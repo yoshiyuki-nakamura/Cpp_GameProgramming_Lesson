@@ -245,8 +245,14 @@ void Main()
     // タイトルへ戻る説明用フォント
     Font to_title_guide_font = Font(30);
 
+    // スコア表示用フォント
+    Font score_font = Font(20);
+
     // シーンを設定
     SceneType scene = SceneType::Title;
+
+    // ゲーム内スコア
+    int score = 0;
 
     // ゲームループです。
     // このwhileの中にゲームプログラムを書きます。
@@ -264,6 +270,9 @@ void Main()
             }
             break;
         case SceneType::Game:
+            // スコアを加算
+            ++score;
+
             // スペースを押下したら
             if (KeySpace.down())
             {
@@ -289,6 +298,9 @@ void Main()
             // スペースを押下したら
             if (KeySpace.down())
             {
+                // スコアを初期状態にする
+                score = 0;
+
                 // プレイヤーを再生成して初期状態にする
                 player = Player(Vec2(100, 400));
 
@@ -322,12 +334,16 @@ void Main()
         case SceneType::Game:
             // 操作説明描画
             control_guide_font(U"スペースキーでジャンプ").drawAt(Scene::Center());
+            // スコア描画
+            score_font(U"Score:" + Format(score)).draw(Arg::topCenter = Vec2(Scene::Center().x, 0), Palette::Yellow);
             break;
         case SceneType::Result:
             // ゲームオーバー描画
             gameover_font(U"ゲームオーバー").drawAt(Scene::Center().moveBy(0, -100));
             // タイトルへ戻る描画
             to_title_guide_font(U"スペースキーでタイトルへ戻る").drawAt(Scene::Center());
+            // スコア描画
+            score_font(U"Score:" + Format(score)).draw(Arg::topCenter = Vec2(Scene::Center().x, 0), Palette::Yellow);
             break;
         }
     }
