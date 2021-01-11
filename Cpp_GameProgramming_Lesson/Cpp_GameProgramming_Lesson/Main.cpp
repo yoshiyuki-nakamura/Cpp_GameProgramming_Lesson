@@ -189,6 +189,16 @@ private:
 };
 
 /// <summary>
+/// シーンの種類
+/// </summary>
+enum SceneType
+{
+    Title,
+    Game,
+    Result,
+};
+
+/// <summary>
 /// 矩形vs矩形の衝突判定
 /// </summary>
 /// <param name="rect1"></param>
@@ -220,31 +230,75 @@ void Main()
     // 敵を生成
     Enemy enemy = Enemy(Vec2(900, 400));
 
+    // ゲームルール説明用フォント
+    Font game_rule_display_font = Font(20);
+
+    // プレススタート説明用フォント
+    Font press_start_guide_font = Font(30);
+
     // 操作説明用フォント
     Font control_guide_font = Font(30);
+
+    // ゲームオーバー表示用フォント
+    Font gameover_font = Font(50);
+
+    // タイトルへ戻る説明用フォント
+    Font to_title_guide_font = Font(30);
+
+    // シーンを設定
+    SceneType scene = SceneType::Title;
 
     // ゲームループです。
     // このwhileの中にゲームプログラムを書きます。
     while (System::Update())
     {
-        // スペースを押下したら
-        if (KeySpace.down())
+        // シーン別更新
+        switch (scene)
         {
-            // プレイヤーをジャンプさせる
-            player.Jump();
-        }
+        case SceneType::Title:
+            // スペースを押下したら
+            if (KeySpace.down())
+            {
+                // ゲームシーンへ遷移
+                scene = SceneType::Game;
+            }
+            break;
+        case SceneType::Game:
+            // スペースを押下したら
+            if (KeySpace.down())
+            {
+                // プレイヤーをジャンプさせる
+                player.Jump();
+            }
 
-        // プレイヤー更新
-        player.Update();
+            // プレイヤー更新
+            player.Update();
 
-        // 敵更新
-        enemy.Update();
+            // 敵更新
+            enemy.Update();
 
-        // 衝突したら
-        if (IsHit(player.GetHitArea(), enemy.GetHitArea()))
-        {
-            // ゲーム終了
-            System::Exit();
+            // 衝突したら
+            if (IsHit(player.GetHitArea(), enemy.GetHitArea()))
+            {
+                // リザルトシーンへ
+                scene = SceneType::Result;
+            }
+
+            break;
+        case SceneType::Result:
+            // スペースを押下したら
+            if (KeySpace.down())
+            {
+                // プレイヤーを再生成して初期状態にする
+                player = Player(Vec2(100, 400));
+
+                // 敵を再生成して初期状態にする
+                enemy = Enemy(Vec2(900, 400));
+
+                // タイトルシーンへ遷移
+                scene = SceneType::Title;
+            }
+            break;
         }
 
         // 背景画像描画
@@ -256,7 +310,25 @@ void Main()
         // 敵描画
         enemy.Draw();
 
-        // 操作説明描画
-        control_guide_font(U"スペースキーでジャンプ").drawAt(Scene::Center());
+        // シーン別描画
+        switch (scene)
+        {
+        case SceneType::Title:
+            // ゲームルール描画
+            game_rule_display_font(U"赤い四角形のあなたは、青い四角形をジャンプでよけ続けるゲーム（仮）").drawAt(Scene::Center().moveBy(0, -100));
+            // プレススタート描画
+            press_start_guide_font(U"スペースキーでスタート").drawAt(Scene::Center());
+            break;
+        case SceneType::Game:
+            // 操作説明描画
+            control_guide_font(U"スペースキーでジャンプ").drawAt(Scene::Center());
+            break;
+        case SceneType::Result:
+            // ゲームオーバー描画
+            gameover_font(U"ゲームオーバー").drawAt(Scene::Center().moveBy(0, -100));
+            // タイトルへ戻る描画
+            to_title_guide_font(U"スペースキーでタイトルへ戻る").drawAt(Scene::Center());
+            break;
+        }
     }
 }
