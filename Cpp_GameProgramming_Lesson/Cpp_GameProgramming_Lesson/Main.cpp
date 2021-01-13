@@ -245,8 +245,30 @@ void Main()
     // タイトルへ戻る説明用フォント
     Font to_title_guide_font = Font(30);
 
+    // スコア表示用フォント
+    Font score_font = Font(20);
+
     // シーンを設定
     SceneType scene = SceneType::Title;
+
+    // ゲーム内スコア
+    int score = 0;
+
+    // ハイスコア
+    int high_score = 0;
+
+    // ハイスコアをロード
+    TextReader reader = TextReader();
+    if (reader.open(U"savedata.txt"))
+    {
+        String line;
+        // ファイルから一行読み出し、lineに格納
+        reader.readLine(line);
+        // 文字列を数値に変換
+        high_score = Parse<int>(line);
+        // 使い終わったので、ファイルを閉じる
+        reader.close();
+    }
 
     // ゲームループです。
     // このwhileの中にゲームプログラムを書きます。
@@ -264,6 +286,9 @@ void Main()
             }
             break;
         case SceneType::Game:
+            // スコアを加算
+            ++score;
+
             // スペースを押下したら
             if (KeySpace.down())
             {
@@ -280,6 +305,15 @@ void Main()
             // 衝突したら
             if (IsHit(player.GetHitArea(), enemy.GetHitArea()))
             {
+                // ハイスコアを上回ったら
+                if (high_score < score)
+                {
+                    // ハイスコアを上書き
+                    high_score = score;
+                    // ハイスコアをセーブデータに保存
+                    TextWriter writer = TextWriter(U"savedata.txt");
+                    writer.write(high_score);
+                }
                 // リザルトシーンへ
                 scene = SceneType::Result;
             }
@@ -289,6 +323,9 @@ void Main()
             // スペースを押下したら
             if (KeySpace.down())
             {
+                // スコアを初期状態にする
+                score = 0;
+
                 // プレイヤーを再生成して初期状態にする
                 player = Player(Vec2(100, 400));
 
@@ -318,16 +355,22 @@ void Main()
             game_rule_display_font(U"赤い四角形のあなたは、青い四角形をジャンプでよけ続けるゲーム（仮）").drawAt(Scene::Center().moveBy(0, -100));
             // プレススタート描画
             press_start_guide_font(U"スペースキーでスタート").drawAt(Scene::Center());
+            // スコア描画
+            score_font(U"High Score:" + Format(high_score)).draw(Arg::topCenter = Vec2(Scene::Center().x, 0), Palette::Yellow);
             break;
         case SceneType::Game:
             // 操作説明描画
             control_guide_font(U"スペースキーでジャンプ").drawAt(Scene::Center());
+            // スコア描画
+            score_font(U"Score:" + Format(score)).draw(Arg::topCenter = Vec2(Scene::Center().x, 0), Palette::Yellow);
             break;
         case SceneType::Result:
             // ゲームオーバー描画
             gameover_font(U"ゲームオーバー").drawAt(Scene::Center().moveBy(0, -100));
             // タイトルへ戻る描画
             to_title_guide_font(U"スペースキーでタイトルへ戻る").drawAt(Scene::Center());
+            // スコア描画
+            score_font(U"Score:" + Format(score)).draw(Arg::topCenter = Vec2(Scene::Center().x, 0), Palette::Yellow);
             break;
         }
     }
